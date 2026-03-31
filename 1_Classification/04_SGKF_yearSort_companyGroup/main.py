@@ -39,7 +39,7 @@ random_state_numbers = [
 index_columns = ["CompanyId", "PersianYear"]
 target_columns = ["r_dicho", "b_dicho"]
 # feature selection & performance tune
-max_features = 15  # 15 fitur adalah sweet spot: cukup untuk performa baik, tapi tetap cepat. Tidak terlalu ketat (10) atau bebas (semua)
+max_features = 33
 feature_selection_method = "kbest"  # opsi: kbest, selectfrommodel, rfecv; kbest digunakan karena sederhana dan efektif untuk regresi fitur
 
 drop_columns = []

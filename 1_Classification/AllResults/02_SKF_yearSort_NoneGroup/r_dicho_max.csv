@@ -1,0 +1,5 @@
+Scaling,Alg,Acc Cv,Acc Te,Sp,Se,MCC,F1,AUC-ROC,AUPR
+MinMax,HGB,"(np.float64(78.17), 33)","(np.float64(78.43), 24)","(np.float64(89.6), 2)","(np.float64(77.28), 33)","(np.float64(57.23), 24)","(np.float64(81.41), 33)","(np.float64(86.7), 30)","(np.float64(91.95), 30)"
+MinMax,LR,"(np.float64(73.3), 31)","(np.float64(74.1), 24)","(np.float64(90.4), 5)","(np.float64(64.99), 33)","(np.float64(53.17), 24)","(np.float64(75.26), 33)","(np.float64(82.9), 33)","(np.float64(88.92), 21)"
+MinMax,RF,"(np.float64(79.46), 25)","(np.float64(79.77), 31)","(np.float64(86.93), 1)","(np.float64(84.68), 29)","(np.float64(57.47), 31)","(np.float64(83.55), 31)","(np.float64(85.78), 32)","(np.float64(90.73), 6)"
+MinMax,SVM,"(np.float64(74.48), 31)","(np.float64(74.31), 9)","(np.float64(92.54), 9)","(np.float64(64.47), 33)","(np.float64(54.77), 9)","(np.float64(75.37), 33)","(np.float64(84.44), 8)","(np.float64(90.73), 8)"
