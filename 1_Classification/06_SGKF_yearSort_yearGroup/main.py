@@ -202,7 +202,7 @@ file_name = dataFiles_name+'_new'
 nRows, nColumns = new_df.shape
 # batasi jumlah fiturnya berdasarkan max_features untuk mempercepat dan kurangi overfit
 number_of_features = min(max_features, nColumns - len(index_columns+dl_columns))
-main_log(f'==> "{file_name}_new" number_of_features: {number_of_features} (set max_features={max_features})')
+main_log(f'==> \"{file_name}_new\" number_of_features: {number_of_features} (max: {max_features})')
 
 # Data_Labeling
 if activations["Data_Labeling"]:

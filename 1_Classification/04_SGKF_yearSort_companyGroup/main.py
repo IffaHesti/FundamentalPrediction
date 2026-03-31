@@ -76,39 +76,38 @@ ml_algorithms = {
     #     }
     # },
     "LR": {
-        "estimator": LogisticRegressionClassifier(),
+        "estimator": LogisticRegressionClassifier(solver='liblinear'),  # solver='liblinear' untuk performa pada dataset kecil
         "param_grid": {
-            'C': [0.01, 0.1, 1],
-            'max_iter': [100, 200, 500, 1000],
-            'class_weight': ["balanced"]
+            'C': [0.01, 0.1, 1],  # kurangi range untuk percepat tuning
+            'max_iter': [100, 200],  # batasi iterasi untuk konvergensi cepat
+            'class_weight': ["balanced"]  # handle imbalance kelas
         }
     },
     "RF": {
-        "estimator": RandomForestClassifier(),
+        "estimator": RandomForestClassifier(n_jobs=-1),  # n_jobs=-1 untuk paralelisme
         "param_grid": {
-            'n_estimators': [10, 20, 50],
+            'n_estimators': [10, 50],  # kurangi untuk waktu
             'criterion': ['gini', 'entropy'],
-            'max_depth': [10, 20, 50],
-            'max_features': [None, 'sqrt', 'log2'],
+            'max_depth': [10, 20],  # batasi depth untuk mencegah overfit
+            'max_features': ['sqrt', 'log2'],  # kurangi opsi untuk efisiensi
             'class_weight': ["balanced"]
         }
     },    
     "SVM":{
-        "estimator": SVMClassifier(),
+        "estimator": SVMClassifier(probability=True),  # probability=True untuk AUC, tapi mahal; pertimbangkan matikan jika tidak perlu
         "param_grid": {
             'C': [0.01, 0.1, 1],
-            'kernel': ['linear', 'rbf'],
-            'degree': [2, 3],
-            'probability': [True],
+            'kernel': ['linear', 'rbf'],  # kurangi degree untuk percepat
+            'degree': [3],  # hanya satu untuk rbf
             'class_weight': ["balanced"]
         }
     },
     "HGB": {
-        "estimator": HistGradientBoostingClassifier(),
+        "estimator": HistGradientBoostingClassifier(early_stopping=True, max_iter=300, random_state=42),  # early_stopping untuk mencegah overfit
         "param_grid": {
             'loss': ['log_loss'],
-            'learning_rate': [0.01, 0.1, 1],
-            'max_depth': [10, 20, 50],
+            'learning_rate': [0.01, 0.1],  # kurangi opsi
+            'max_depth': [10, 20],
             'class_weight': ["balanced"]
         }
     }
@@ -201,8 +200,8 @@ new_df.to_csv(f'{dataFolder_path}/{dataFiles_name}_new.csv', index=False)
 
 file_name = dataFiles_name+'_new'
 nRows, nColumns = new_df.shape
-number_of_features = (nColumns - len(index_columns+dl_columns))
-main_log(f'==> \"{file_name}_new\" number_of_features: {number_of_features}')
+number_of_features = min(max_features, (nColumns - len(index_columns+dl_columns)))  # batasi fitur maksimal 10 untuk mencegah overfitting pada dataset kecil dan mempercepat tuning
+main_log(f'==> \"{file_name}_new\" number_of_features: {number_of_features} (max: {max_features})')
 
 # Data_Labeling
 if activations["Data_Labeling"]:

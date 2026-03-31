@@ -199,8 +199,11 @@ class Data_Preparation:
                 # Get the names of the selected features
                 selected_features = final_scores.Features[selected_feature_indices]
 
+                # Get all features ranked by score
+                ranked_features = final_scores.Features.iloc[np.argsort(feature_scores)[::-1]]
+
                 # Print the ranked feature names and scores
-                KBest_ouputs.append(selected_features.tolist())
+                KBest_ouputs.append(ranked_features.tolist())
 
         else:
             for sample_index, _ in kf.split(X, y):
@@ -222,8 +225,11 @@ class Data_Preparation:
                 # Get the names of the selected features
                 selected_features = final_scores.Features[selected_feature_indices]
 
+                # Get all features ranked by score
+                ranked_features = final_scores.Features.iloc[np.argsort(feature_scores)[::-1]]
+
                 # Print the ranked feature names and scores
-                KBest_ouputs.append(selected_features.tolist())          
+                KBest_ouputs.append(ranked_features.tolist())          
 
         final_scores = self.get_finalScores(KBest_ouputs, features)
         final_scores.to_csv(f"{outPut_path}/KBest_fold_{fold_number}.csv", index=False)
