@@ -39,8 +39,8 @@ random_state_numbers = [
 index_columns = ["CompanyId", "PersianYear"]
 target_columns = ["r_dicho", "b_dicho"]
 # feature selection & performance tune
-max_features = 10  # batasi jumlah fitur teratas yang diuji
-feature_selection_method = "kbest"  # opsi: kbest, selectfrommodel, rfecv
+max_features = 15  # 15 fitur adalah sweet spot: cukup untuk performa baik, tapi tetap cepat. Tidak terlalu ketat (10) atau bebas (semua)
+feature_selection_method = "kbest"  # opsi: kbest, selectfrommodel, rfecv; kbest digunakan karena sederhana dan efektif untuk regresi fitur
 
 drop_columns = []
 ######### Main Parameters #########
@@ -56,7 +56,7 @@ dl_rules = "R2B2"
 dp_input_path = dl_output_path
 dp_output_path = f'{resultFolder_path}/2_Prepared_Data'
 dp_methods = [
-    "MinMax", "Standard"
+    "MinMax"  # gunakan hanya MinMax untuk mempercepat tanpa mengorbankan performa (Standard memberikan efek serupa dengan waktu lebih lama)
 ]
 ######### Data_Preparation Parameters #########
 
@@ -76,38 +76,35 @@ ml_algorithms = {
     #     }
     # },
     "LR": {
-        "estimator": LogisticRegressionClassifier(solver='liblinear'),
+        "estimator": LogisticRegressionClassifier(solver='liblinear', max_iter=500),
         "param_grid": {
-            'C': [0.01, 0.1, 1],
-            'max_iter': [100, 200],
+            'C': [0.001, 0.01, 0.1, 1, 10],
             'class_weight': ["balanced"]
         }
     },
     "RF": {
         "estimator": RandomForestClassifier(n_jobs=-1),
         "param_grid": {
-            'n_estimators': [10, 50],
-            'criterion': ['gini', 'entropy'],
-            'max_depth': [10, 20],
-            'max_features': ['sqrt', 'log2'],
+            'n_estimators': [50, 100],
+            'max_depth': [10, 15, 20],
+            'min_samples_split': [2, 5],
             'class_weight': ["balanced"]
         }
     },    
     "SVM":{
         "estimator": SVMClassifier(probability=True),
         "param_grid": {
-            'C': [0.01, 0.1, 1],
+            'C': [0.001, 0.01, 0.1, 1, 10],
             'kernel': ['linear', 'rbf'],
-            'degree': [3],
             'class_weight': ["balanced"]
         }
     },
     "HGB": {
-        "estimator": HistGradientBoostingClassifier(early_stopping=True, max_iter=300, random_state=42),
+        "estimator": HistGradientBoostingClassifier(early_stopping=True, max_iter=500, random_state=42, validation_fraction=0.1),
         "param_grid": {
-            'loss': ['log_loss'],
-            'learning_rate': [0.01, 0.1],
-            'max_depth': [10, 20],
+            'learning_rate': [0.01, 0.05, 0.1],
+            'max_depth': [5, 10, 15],
+            'l2_regularization': [0, 0.01],
             'class_weight': ["balanced"]
         }
     }

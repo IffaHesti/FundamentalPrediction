@@ -1,9 +1,0 @@
-Scaling,Alg,Acc Cv,Acc Te,Sp,Se,MCC,F1,AUC-ROC,AUPR
-MinMax,HGB,"(np.float64(78.01), 10)","(np.float64(76.58), 6)","(np.float64(88.53), 4)","(np.float64(71.55), 7)","(np.float64(56.22), 6)","(np.float64(78.28), 6)","(np.float64(85.26), 6)","(np.float64(91.38), 6)"
-MinMax,LR,"(np.float64(74.79), 8)","(np.float64(72.03), 9)","(np.float64(90.93), 2)","(np.float64(61.96), 1)","(np.float64(50.16), 9)","(np.float64(72.75), 1)","(np.float64(80.88), 6)","(np.float64(88.32), 10)"
-MinMax,RF,"(np.float64(76.9), 6)","(np.float64(78.12), 9)","(np.float64(86.94), 1)","(np.float64(78.27), 9)","(np.float64(55.31), 9)","(np.float64(81.39), 9)","(np.float64(84.51), 6)","(np.float64(90.41), 8)"
-MinMax,SVM,"(np.float64(76.19), 10)","(np.float64(72.86), 10)","(np.float64(90.4), 7)","(np.float64(62.8), 10)","(np.float64(51.35), 7)","(np.float64(73.9), 10)","(np.float64(82.79), 9)","(np.float64(89.85), 7)"
-Standard,HGB,"(np.float64(78.03), 10)","(np.float64(76.58), 6)","(np.float64(88.53), 4)","(np.float64(71.22), 7)","(np.float64(56.22), 6)","(np.float64(78.28), 6)","(np.float64(85.23), 6)","(np.float64(91.33), 6)"
-Standard,LR,"(np.float64(76.03), 9)","(np.float64(73.37), 7)","(np.float64(90.4), 4)","(np.float64(62.8), 6)","(np.float64(52.28), 7)","(np.float64(74.26), 7)","(np.float64(81.94), 6)","(np.float64(88.59), 10)"
-Standard,RF,"(np.float64(76.87), 6)","(np.float64(78.12), 9)","(np.float64(86.94), 1)","(np.float64(78.27), 9)","(np.float64(55.31), 9)","(np.float64(81.39), 9)","(np.float64(84.52), 6)","(np.float64(90.43), 8)"
-Standard,SVM,"(np.float64(76.49), 6)","(np.float64(73.57), 10)","(np.float64(90.4), 6)","(np.float64(63.79), 10)","(np.float64(52.31), 7)","(np.float64(74.59), 10)","(np.float64(82.64), 6)","(np.float64(89.0), 6)"

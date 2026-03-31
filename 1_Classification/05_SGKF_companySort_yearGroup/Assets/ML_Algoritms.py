@@ -105,7 +105,7 @@ class  ML_Algoritms:
                         grid_obj = RandomizedSearchCV(
                             estimator=self.algorithms[alName]["estimator"],
                             param_distributions=self.algorithms[alName]["param_grid"],
-                            n_iter=30,
+                            n_iter=50,  # tingkatkan dari 30 ke 50 untuk eksplorasi parameter space yang lebih baik (trade-off minimal dengan waktu)
                             scoring=self.scorer,
                             cv=kf,
                             n_jobs=self.n_jobs,

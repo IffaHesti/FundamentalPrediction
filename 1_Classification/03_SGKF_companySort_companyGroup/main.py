@@ -39,7 +39,7 @@ random_state_numbers = [
 index_columns = ["CompanyId", "PersianYear"]
 target_columns = ["r_dicho", "b_dicho"]
 # feature selection & performance tune
-max_features = 10  # batasi jumlah fitur teratas yang diuji untuk mengurangi overfitting dan waktu komputasi
+max_features = 15  # 15 fitur adalah sweet spot: cukup untuk performa baik, tapi tetap cepat. Tidak terlalu ketat (10) atau bebas (semua)
 feature_selection_method = "kbest"  # opsi: kbest, selectfrommodel, rfecv; kbest digunakan karena sederhana dan efektif untuk regresi fitur
 
 drop_columns = []
@@ -56,7 +56,7 @@ dl_rules = "R2B2"
 dp_input_path = dl_output_path
 dp_output_path = f'{resultFolder_path}/2_Prepared_Data'
 dp_methods = [
-    "MinMax", "Standard"
+    "MinMax"  # gunakan hanya MinMax untuk mempercepat tanpa mengorbankan performa (Standard memberikan efek serupa dengan waktu lebih lama)
 ]
 ######### Data_Preparation Parameters #########
 
@@ -76,38 +76,35 @@ ml_algorithms = {
     #     }
     # },
     "LR": {
-        "estimator": LogisticRegressionClassifier(solver='liblinear'),  # solver='liblinear' untuk performa pada dataset kecil
+        "estimator": LogisticRegressionClassifier(solver='liblinear', max_iter=500),  # solver='liblinear' untuk dataset kecil; max_iter=500 untuk konvergensi lebih baik
         "param_grid": {
-            'C': [0.01, 0.1, 1],  # kurangi range untuk percepat tuning
-            'max_iter': [100, 200],  # batasi iterasi untuk konvergensi cepat
+            'C': [0.001, 0.01, 0.1, 1, 10],  # ekspansi range C untuk eksplorasi lebih baik (regularization lebih penting dari max_iter)
             'class_weight': ["balanced"]  # handle imbalance kelas
         }
     },
     "RF": {
         "estimator": RandomForestClassifier(n_jobs=-1),  # n_jobs=-1 untuk paralelisme
         "param_grid": {
-            'n_estimators': [10, 50],  # kurangi untuk waktu
-            'criterion': ['gini', 'entropy'],
-            'max_depth': [10, 20],  # batasi depth untuk mencegah overfit
-            'max_features': ['sqrt', 'log2'],  # kurangi opsi untuk efisiensi
+            'n_estimators': [50, 100],  # 50-100 trees adalah optimal balance (30 trees terlalu sedikit, 200+ terlalu lambat)
+            'max_depth': [10, 15, 20],  # lebih banyak opsi depth untuk fine-tuning
+            'min_samples_split': [2, 5],  # tambah regularisasi via min_samples_split
             'class_weight': ["balanced"]
         }
     },    
     "SVM":{
-        "estimator": SVMClassifier(probability=True),  # probability=True untuk AUC, tapi mahal; pertimbangkan matikan jika tidak perlu
+        "estimator": SVMClassifier(probability=True),  # probability=True untuk AUC (probabilitas tidak menambah waktu training signifikan di RandomCV)
         "param_grid": {
-            'C': [0.01, 0.1, 1],
-            'kernel': ['linear', 'rbf'],  # kurangi degree untuk percepat
-            'degree': [3],  # hanya satu untuk rbf
+            'C': [0.001, 0.01, 0.1, 1, 10],  # ekspansi C lebih penting untuk SVM
+            'kernel': ['linear', 'rbf'],  # pertahankan beiden kernel
             'class_weight': ["balanced"]
         }
     },
     "HGB": {
-        "estimator": HistGradientBoostingClassifier(early_stopping=True, max_iter=300, random_state=42),  # early_stopping untuk mencegah overfit
+        "estimator": HistGradientBoostingClassifier(early_stopping=True, max_iter=500, random_state=42, validation_fraction=0.1),  # max_iter=500 untuk performa lebih baik; validation_fraction untuk early stop yang lebih akurat
         "param_grid": {
-            'loss': ['log_loss'],
-            'learning_rate': [0.01, 0.1],  # kurangi opsi
-            'max_depth': [10, 20],
+            'learning_rate': [0.01, 0.05, 0.1],  # tambah 0.05 untuk fine-tuning
+            'max_depth': [5, 10, 15],  # HGB tidak perlu depth besar; range lebih kecil tapi lebih variatif
+            'l2_regularization': [0, 0.01],  # tambah L2 regularization untuk kontrol overfit
             'class_weight': ["balanced"]
         }
     }
@@ -200,7 +197,7 @@ new_df.to_csv(f'{dataFolder_path}/{dataFiles_name}_new.csv', index=False)
 
 file_name = dataFiles_name+'_new'
 nRows, nColumns = new_df.shape
-number_of_features = min(max_features, (nColumns - len(index_columns+dl_columns)))  # batasi fitur maksimal 10 untuk mencegah overfitting pada dataset kecil dan mempercepat tuning
+number_of_features = min(max_features, (nColumns - len(index_columns+dl_columns)))  # batasi fitur maksimal 15 untuk balance performa dan kecepatan
 main_log(f'==> \"{file_name}_new\" number_of_features: {number_of_features} (max: {max_features})')
 
 # Data_Labeling
